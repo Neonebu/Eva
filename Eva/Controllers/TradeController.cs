@@ -14,8 +14,8 @@ namespace Eva.Controllers
             _tradeService = tradeService;
         }
 
-        [HttpPost("buy")]
-        public async Task<IActionResult> BuyShares(int portfolioId, string symbol, int quantity)
+        [HttpPost("Buy")]
+        public async Task<IActionResult> PostBuyShares(int portfolioId, string symbol, int quantity)
         {
             var result = await _tradeService.BuyShares(portfolioId, symbol, quantity);
             if (result)
@@ -25,8 +25,8 @@ namespace Eva.Controllers
             return BadRequest("Trade failed");
         }
 
-        [HttpPost("sell")]
-        public async Task<IActionResult> SellShares(int portfolioId, string symbol, int quantity)
+        [HttpPost("Sell")]
+        public async Task<IActionResult> PostSellShares(int portfolioId, string symbol, int quantity)
         {
             var result = await _tradeService.SellShares(portfolioId, symbol, quantity);
             if (result)
