@@ -4,24 +4,29 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Eva.Repositories;
 
 namespace Eva.Services
 {
     public class TradeService : ITradeService
     {
-        private readonly EvaDbContext _context;
+        private readonly IShareRepository _shareRepository;
+        private readonly IPortfolioRepository _portfolioRepository;
+        private readonly ITradeRepository _tradeRepository;
 
-        public TradeService(EvaDbContext context)
+        public TradeService(IShareRepository shareRepository, IPortfolioRepository portfolioRepository, ITradeRepository tradeRepository)
         {
-            _context = context;
+            _shareRepository = shareRepository;
+            _portfolioRepository = portfolioRepository;
+            _tradeRepository = tradeRepository;
         }
 
         public async Task<bool> BuyShares(int portfolioId, string symbol, int quantity)
         {
-            var share = await _context.Shares.FirstOrDefaultAsync(s => s.Symbol == symbol);
+            var share = await _shareRepository.GetBySymbolAsync(symbol);
             if (share == null) return false;
 
-            var portfolio = await _context.Portfolios.FindAsync(portfolioId);
+            var portfolio = await _portfolioRepository.GetByIdAsync(portfolioId);
             if (portfolio == null) return false;
 
             var trade = new Trade
@@ -33,21 +38,20 @@ namespace Eva.Services
                 Price = share.Price
             };
 
-            await _context.Trades.AddAsync(trade);
-            await _context.SaveChangesAsync();
+            await _tradeRepository.AddAsync(trade);
             return true;
         }
 
         public async Task<bool> SellShares(int portfolioId, string symbol, int quantity)
         {
-            var share = await _context.Shares.FirstOrDefaultAsync(s => s.Symbol == symbol);
+            var share = await _shareRepository.GetBySymbolAsync(symbol);
             if (share == null) return false;
 
-            var portfolio = await _context.Portfolios.Include(p => p.Trades).FirstOrDefaultAsync(p => p.PortfolioId == portfolioId);
+            var portfolio = await _portfolioRepository.GetByIdAsync(portfolioId);
             if (portfolio == null) return false;
 
-            var totalBought = portfolio.Trades.Where(t => t.Symbol == symbol && t.TradeType == TradeType.BUY).Sum(t => t.Quantity);
-            var totalSold = portfolio.Trades.Where(t => t.Symbol == symbol && t.TradeType == TradeType.SELL).Sum(t => t.Quantity);
+            var totalBought = await _tradeRepository.GetTotalBoughtAsync(portfolioId, symbol);
+            var totalSold = await _tradeRepository.GetTotalSoldAsync(portfolioId, symbol);
             var availableShares = totalBought - totalSold;
 
             if (availableShares < quantity) return false;
@@ -61,8 +65,7 @@ namespace Eva.Services
                 Price = share.Price
             };
 
-            await _context.Trades.AddAsync(trade);
-            await _context.SaveChangesAsync();
+            await _tradeRepository.AddAsync(trade);
             return true;
         }
     }
