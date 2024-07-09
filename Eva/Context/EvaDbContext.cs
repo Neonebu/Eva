@@ -6,7 +6,6 @@ namespace Eva.Context
     public class EvaDbContext : DbContext
     {
         public EvaDbContext(DbContextOptions options ) : base(options) { }
-        public DbSet<User> Users { get; set; }
         public DbSet<Share> Shares { get; set; }
         public DbSet<Portfolio> Portfolios { get; set; }
         public DbSet<Trade> Trades { get; set; }
@@ -23,7 +22,9 @@ namespace Eva.Context
             modelBuilder.Entity<Portfolio>().HasData(
               new Portfolio { PortfolioId = 1, UserEmail = "user1@example.com" },
               new Portfolio { PortfolioId = 2, UserEmail = "user2@example.com" },
-              new Portfolio { PortfolioId = 3, UserEmail = "user3@example.com" }
+              new Portfolio { PortfolioId = 3, UserEmail = "user3@example.com" },
+              new Portfolio { PortfolioId = 4, UserEmail = "user4@example.com" },
+              new Portfolio { PortfolioId = 5, UserEmail = "user5@example.com" }
           );
         }
     }

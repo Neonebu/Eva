@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eva.Migrations
 {
     [DbContext(typeof(EvaDbContext))]
-    [Migration("20240708132220_ApplyRepositoryPattern")]
-    partial class ApplyRepositoryPattern
+    [Migration("20240709130247_newMigration")]
+    partial class newMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,16 @@ namespace Eva.Migrations
                         {
                             PortfolioId = 3,
                             UserEmail = "user3@example.com"
+                        },
+                        new
+                        {
+                            PortfolioId = 4,
+                            UserEmail = "user4@example.com"
+                        },
+                        new
+                        {
+                            PortfolioId = 5,
+                            UserEmail = "user5@example.com"
                         });
                 });
 
@@ -119,30 +129,6 @@ namespace Eva.Migrations
                     b.HasIndex("PortfolioId");
 
                     b.ToTable("Trades");
-                });
-
-            modelBuilder.Entity("Eva.Models.User", b =>
-                {
-                    b.Property<string>("Email")
-                        .HasMaxLength(320)
-                        .HasColumnType("varchar(320)");
-
-                    b.Property<string>("FirstName")
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
-
-                    b.Property<string>("LastName")
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("varchar(15)");
-
-                    b.HasKey("Email");
-
-                    b.ToTable("users");
                 });
 
             modelBuilder.Entity("Eva.Models.Trade", b =>

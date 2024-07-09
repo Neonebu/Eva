@@ -18,7 +18,7 @@ namespace Eva.Controllers
         [HttpPost("buy")]
         public async Task<IActionResult> BuyShares([FromBody] BuyRequest request)
         {
-            var result = await _tradeService.BuyShares(request.UserEmail, request.PortfolioId, request.Symbol, request.Quantity);
+            var result = await _tradeService.BuyShares(request.Email, request.PortfolioId, request.Symbol, request.Quantity);
             if (result)
             {
                 return Ok("Trade successful");
@@ -29,7 +29,7 @@ namespace Eva.Controllers
         [HttpPost("sell")]
         public async Task<IActionResult> SellShares([FromBody] SellRequest request)
         {
-            var result = await _tradeService.SellShares(request.UserEmail, request.PortfolioId, request.Symbol, request.Quantity);
+            var result = await _tradeService.SellShares(request.Email, request.PortfolioId, request.Symbol, request.Quantity);
             if (result)
             {
                 return Ok("Trade successful");

@@ -8,11 +8,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Eva.Migrations
 {
     /// <inheritdoc />
-    public partial class ApplyRepositoryPattern : Migration
+    public partial class newMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateTable(
                 name: "Portfolios",
                 columns: table => new
@@ -74,7 +77,9 @@ namespace Eva.Migrations
                 {
                     { 1, "user1@example.com" },
                     { 2, "user2@example.com" },
-                    { 3, "user3@example.com" }
+                    { 3, "user3@example.com" },
+                    { 4, "user4@example.com" },
+                    { 5, "user5@example.com" }
                 });
 
             migrationBuilder.InsertData(
