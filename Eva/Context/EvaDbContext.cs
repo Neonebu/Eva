@@ -6,7 +6,7 @@ namespace Eva.Context
     public class EvaDbContext : DbContext
     {
         public EvaDbContext(DbContextOptions options ) : base(options) { }
-        public DbSet<User> users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Share> Shares { get; set; }
         public DbSet<Portfolio> Portfolios { get; set; }
         public DbSet<Trade> Trades { get; set; }

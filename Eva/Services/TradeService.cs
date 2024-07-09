@@ -13,21 +13,26 @@ namespace Eva.Services
         private readonly IShareRepository _shareRepository;
         private readonly IPortfolioRepository _portfolioRepository;
         private readonly ITradeRepository _tradeRepository;
+        private readonly IUserRepository _userRepository;
 
-        public TradeService(IShareRepository shareRepository, IPortfolioRepository portfolioRepository, ITradeRepository tradeRepository)
+        public TradeService(IShareRepository shareRepository, IPortfolioRepository portfolioRepository, ITradeRepository tradeRepository, IUserRepository userRepository)
         {
             _shareRepository = shareRepository;
             _portfolioRepository = portfolioRepository;
             _tradeRepository = tradeRepository;
+            _userRepository = userRepository;
         }
 
-        public async Task<bool> BuyShares(int portfolioId, string symbol, int quantity)
+        public async Task<bool> BuyShares(string userEmail, int portfolioId, string symbol, int quantity)
         {
+            var user = await _userRepository.GetByEmailAsync(userEmail);
+            if (user == null) return false;
+
             var share = await _shareRepository.GetBySymbolAsync(symbol);
             if (share == null) return false;
 
             var portfolio = await _portfolioRepository.GetByIdAsync(portfolioId);
-            if (portfolio == null) return false;
+            if (portfolio == null || portfolio.UserEmail != userEmail) return false;
 
             var trade = new Trade
             {
@@ -42,13 +47,16 @@ namespace Eva.Services
             return true;
         }
 
-        public async Task<bool> SellShares(int portfolioId, string symbol, int quantity)
+        public async Task<bool> SellShares(string userEmail, int portfolioId, string symbol, int quantity)
         {
+            var user = await _userRepository.GetByEmailAsync(userEmail);
+            if (user == null) return false;
+
             var share = await _shareRepository.GetBySymbolAsync(symbol);
             if (share == null) return false;
 
             var portfolio = await _portfolioRepository.GetByIdAsync(portfolioId);
-            if (portfolio == null) return false;
+            if (portfolio == null || portfolio.UserEmail != userEmail) return false;
 
             var totalBought = await _tradeRepository.GetTotalBoughtAsync(portfolioId, symbol);
             var totalSold = await _tradeRepository.GetTotalSoldAsync(portfolioId, symbol);
