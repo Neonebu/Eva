@@ -11,8 +11,6 @@ namespace Eva.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly EvaDbContext _dbContext;
-
-
         public UserController(ILogger<UserController> logger, EvaDbContext dbContext)
         {
             _logger = logger;
