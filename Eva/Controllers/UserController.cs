@@ -7,13 +7,13 @@ namespace Eva.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class EvaController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly ILogger<EvaController> _logger;
+        private readonly ILogger<UserController> _logger;
         private readonly EvaDbContext _dbContext;
 
 
-        public EvaController(ILogger<EvaController> logger, EvaDbContext dbContext)
+        public UserController(ILogger<UserController> logger, EvaDbContext dbContext)
         {
             _logger = logger;
             _dbContext = dbContext;
@@ -21,27 +21,27 @@ namespace Eva.Controllers
         [HttpPost("AddUser")]
         public async Task<IActionResult> AddUser(User user)
         {
-            _dbContext.users.Add(user);
+            _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
             return Ok(user);
         }
         [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAll()
         {
-            var users = await _dbContext.users.ToListAsync();
+            var users = await _dbContext.Users.ToListAsync();
             return Ok(users);
         }
         [HttpDelete("DeleteUser")]
         public async Task<IActionResult> DeleteUser(User user)
         {
-            _dbContext.users.Remove(user);
+            _dbContext.Users.Remove(user);
             await _dbContext.SaveChangesAsync();
             return Ok(user);
         }
         [HttpGet("GetUser")]
         public async Task<IActionResult> GetUser(string email)
         {
-           var user = await _dbContext.users.FirstOrDefaultAsync(x => x.Email == email);
+           var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == email);
             if (user == null) {
                 return BadRequest("Not Found");
             }
